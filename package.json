@@ -1,0 +1,22 @@
+{
+  "name": "psychapp_be",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "dependencies": {
+    "express": "^4.17.1",
+    "express-form-data": "^2.0.12",
+    "http": "0.0.0",
+    "mysql2": "^2.1.0",
+    "nodemon": "^2.0.2",
+    "pg": "^7.17.1",
+    "sequelize": "^5.21.3",
+    "sequelize-cli": "^5.5.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "nicolas zachariou",
+  "license": "ISC"
+}
