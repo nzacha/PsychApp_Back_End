@@ -12,6 +12,7 @@ db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
 db.Question = require('./question')(sequelize)
+db.User = require('./user')(sequelize)
 
 /*
 db.Restaurants = require('./restaurants')(sequelize)

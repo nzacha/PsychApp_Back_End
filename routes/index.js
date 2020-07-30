@@ -2,6 +2,7 @@ var express = require('express')
 var router = express.Router();
 
 router.use('/questions', require('./questions'));
+router.use('/users', require('./users'));
 
 /*
 router.use('/restaurants', require('./restaurants'));
