@@ -1,18 +1,20 @@
 const Sequelize = require('sequelize')
 
 module.exports = (sequelize) => {
-    class User extends Sequelize.Model {}
-    User.init({
+    class Answer extends Sequelize.Model {}
+    Answer.init({
         id: {
             type: Sequelize.INTEGER,
             primaryKey: true,
             autoIncrement: true
         },
-        name:{            
-            type: Sequelize.STRING
+        text: {
+            type: Sequelize.STRING,
+            allowNull: false
         }
     }, {
         sequelize,
-        modelName: 'users'});
-    return User 
+        modelName: 'answer'});
+    return Answer 
 }
+

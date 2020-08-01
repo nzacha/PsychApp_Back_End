@@ -9,17 +9,30 @@ exports.getUsers = async (request, response, next) =>{
     }
 }
 
-var researchers = ["Marianna", "Penelope"]
 exports.addUser = async (request, response, next) =>{	
     try{    	
-    	researcher = request.body.researcher
-    	if(researchers.includes(researcher)){
-	    	models.User.create({researcher: request.body.researcher, name: request.body.name})
+    	researcher = await models.Researcher.findOne({where: {id: request.body.researcherId}})
+    	if(researcher){
+	    	models.User.create({researcherId: request.body.researcherId, name: request.body.name})
 	    	response.status(200).json('User created')
 	    }else{
 	    	response.status(400).json("An Error ocurred")
 	    }
     } catch (e) {
     	next(e)
+    }
+}
+
+exports.removeUser = async (request, response, next) =>{   
+    try{        
+        user = await models.User.findOne({where: {id: request.params.id}})
+        if(user){
+            await user.destroy()
+            response.status(200).json('User removed')
+        }else{
+            response.status(400).json("An Error ocurred")
+        }
+    } catch (e) {
+        next(e)
     }
 }

@@ -11,33 +11,21 @@ const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, proces
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
-db.Question = require('./question')(sequelize)
 db.User = require('./user')(sequelize)
+db.Researcher = require('./researcher')(sequelize)
+db.Question = require('./question')(sequelize)
+db.Question_Option = require('./question_option')(sequelize)
+db.Answer = require('./answer')(sequelize)
 
-/*
-db.Restaurants = require('./restaurants')(sequelize)
-db.Users = require('./users')(sequelize)
-db.Orders = require('./orders')(sequelize)
-db.Products = require('./products')(sequelize)
-db.OrderedProducts = require('./orderedProducts')(sequelize)
-db.Changes = require('./changes')(sequelize)
-db.Additions = require('./added_products')(sequelize)
-*/
-
-/*
-db.Products.belongsTo(db.Restaurants)
-db.Restaurants.hasMany(db.Products, {onDelete: 'cascade'})
-db.Orders.belongsTo(db.Restaurants)
-db.Orders.hasMany(db.OrderedProducts, {onDelete: 'cascade'})
-db.Orders.hasMany(db.Additions)
-db.Restaurants.hasMany(db.Orders, {onDelete: 'cascade'})
-db.OrderedProducts.belongsTo(db.Orders)
-db.OrderedProducts.belongsTo(db.Products)
-db.OrderedProducts.hasMany(db.Changes)
-db.Changes.belongsTo(db.OrderedProducts)
-db.Additions.belongsTo(db.Orders) 
-db.Additions.belongsTo(db.Products)
-db.Changes.belongsTo(db.Orders)
-*/
+db.User.belongsTo(db.Researcher)
+db.Researcher.hasMany(db.User)
+db.Question.belongsTo(db.Researcher)
+db.Researcher.hasMany(db.Question)
+db.Question_Option.belongsTo(db.Question)
+db.Question.hasMany(db.Question_Option, {onDelete: 'cascade'})
+db.Answer.belongsTo(db.User)
+db.User.hasMany(db.Answer)
+db.Answer.belongsTo(db.Question)
+db.Question.hasMany(db.Answer)
 
 module.exports = db;

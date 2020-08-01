@@ -8,16 +8,20 @@ module.exports = (sequelize) => {
             primaryKey: true,
             autoIncrement: true
         },
-        type: {
+        question_type: {
             type: Sequelize.STRING,            
             defaultValue: "Text",
             validate:{
-                isIn: [["Text", "Slider", "Multiple_Choice"]],
+                isIn: [["Text", "Slider"]],
             }
         },
-        question:{
+        question_text:{
             type: Sequelize.STRING,
             defaultValue: 'This is a question'
+        },
+        levels: {
+            type: Sequelize.INTEGER,
+            defaultValue: '1'
         }
     }, {
         sequelize,
