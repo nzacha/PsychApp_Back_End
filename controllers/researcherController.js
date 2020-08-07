@@ -13,7 +13,7 @@ exports.addResearcher = async (request, response, next) =>{
     try{    	
         name = request.body.name
         if(name){
-        	models.Researcher.create({name: request.body.name})
+        	models.Researcher.create({name: request.body.name, surname: request.body.surname})
             response.status(200).json("Researcher created successfully")
         }else{
             response.status(400).json("Something went wrong")

@@ -8,8 +8,11 @@ module.exports = (sequelize) => {
             primaryKey: true,
             autoIncrement: true
         },
-        name:{            
+        name: {            
             type: Sequelize.STRING
+        },
+        surname: {
+        	type: Sequelize.STRING
         }
     }, {
         sequelize,
