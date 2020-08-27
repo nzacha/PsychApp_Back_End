@@ -11,11 +11,12 @@ exports.getResearchers = async (request, response, next) =>{
 
 exports.addResearcher = async (request, response, next) =>{	
     try{    	
-        name = request.body.name
-        if(name){
-        	models.Researcher.create({name: request.body.name, surname: request.body.surname})
+        email = request.body.email
+        password = request.body.password
+        if(email && password){
+        	models.Researcher.create({name: request.body.name, surname: request.body.surname, email: email, password: password})
             response.status(200).json("Researcher created successfully")
-        }else{
+        } else {
             response.status(400).json("Something went wrong")
         }
     } catch (e) {
@@ -36,3 +37,4 @@ exports.removeResearcher = async (request, response, next) =>{
         next(e)
     }
 }
+

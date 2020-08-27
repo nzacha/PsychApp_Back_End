@@ -34,5 +34,5 @@ app.get('/',function (req, res){
 app.use('/', index)
 
 let server = app.listen(port, function(){
-    console.log('Server running')
+    console.log('Server running at: '+host+":"+port)
 })
