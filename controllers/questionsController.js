@@ -18,17 +18,12 @@ exports.getQuestionsOf = async (request, response, next) =>{
     }
 }
 
-var types = ["Text", "Slider"]
 exports.addQuestion = async (request, response, next) =>{	
     try{    	
-    	type = request.body.type
         researcher = await models.Researcher.findOne({where: {id: request.params.researcherId}})
-        levels = request.body.levels
-        if(!levels)
-            levels = 1
-    	if(types.includes(type) && researcher){
-	    	models.Question.create({question_type: request.body.type, question_text: request.body.question, researcherId: request.params.researcherId, levels: levels})
-	    	response.status(200).json('Question created')
+        if(researcher){
+	    	model = await models.Question.create({question_type: request.body.type, question_text: request.body.question, researcherId: request.params.researcherId, levels: request.body.levels})
+	    	response.status(200).json(model)
 	    }else{
 	    	response.status(400).json("An Error ocurred")
 	    }
@@ -74,6 +69,21 @@ exports.removeQuestionOption = async (request, response, next) =>{
             response.status(200).json('Question destroyed')
         }else{
             response.status(400).json("An Error ocurred")
+        }
+    } catch (e) {
+        next(e)
+    }
+}
+
+exports.updateQuestion = async (request, response, next) => {
+    try {
+        var question = await models.Question.findOne({where: {id: request.params.id}});
+        if (question){
+            var text = 
+            await question.update({question_text: request.body.question_text, question_type: request.body.question_type, levels: request.body.levels});
+            response.status(200).json("OK")
+        } else { 
+            response.status(400).json("An Error ocurred");
         }
     } catch (e) {
         next(e)

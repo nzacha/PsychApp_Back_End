@@ -27,6 +27,9 @@ module.exports = (sequelize) => {
         },
         description: {
             type: Sequelize.STRING
+        },
+        phone: {
+            type: Sequelize.INTEGER
         }
     }, {
         sequelize,

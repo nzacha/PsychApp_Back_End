@@ -22,8 +22,8 @@ exports.addUser = async (request, response, next) =>{
     try{    	
     	researcher = await models.Researcher.findOne({where: {id: request.body.researcherId}})
     	if(researcher){
-	    	models.User.create({researcherId: request.body.researcherId, name: request.body.name, surname: request.body.surname})
-	    	response.status(200).json('User created')
+	    	user = await models.User.create({researcherId: request.body.researcherId, name: request.body.name, surname: request.body.surname})
+	    	response.status(200).json({"message":"User created", "id": user.id})
 	    }else{
 	    	response.status(400).json("An Error ocurred")
 	    }

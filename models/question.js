@@ -13,15 +13,18 @@ module.exports = (sequelize) => {
             defaultValue: "Text",
             validate:{
                 isIn: [["Text", "Slider"]],
-            }
+            },
+            allowNull: false
         },
         question_text:{
             type: Sequelize.STRING,
-            defaultValue: 'This is a question'
+            defaultValue: 'This is a question',
+            allowNull: false
         },
         levels: {
             type: Sequelize.INTEGER,
-            defaultValue: '1'
+            defaultValue: '1',
+            allowNull: false
         }
     }, {
         sequelize,

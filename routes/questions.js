@@ -8,5 +8,6 @@ router.post('/:researcherId', questionsController.addQuestion)
 router.delete('/:id', questionsController.removeQuestion)
 router.post('/options/:questionId', questionsController.addQuestionOption)
 router.delete('/options/:id', questionsController.removeQuestionOption)
+router.patch('/:id', questionsController.updateQuestion)
 
 module.exports = router
