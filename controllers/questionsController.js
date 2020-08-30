@@ -79,7 +79,6 @@ exports.updateQuestion = async (request, response, next) => {
     try {
         var question = await models.Question.findOne({where: {id: request.params.id}});
         if (question){
-            var text = 
             await question.update({question_text: request.body.question_text, question_type: request.body.question_type, levels: request.body.levels});
             response.status(200).json("OK")
         } else { 

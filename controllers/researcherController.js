@@ -29,7 +29,7 @@ exports.removeResearcher = async (request, response, next) =>{
         researcher = await models.Researcher.findOne({where: {id: request.params.id}})
         if (researcher){
             await researcher.destroy()
-            response.sendStatus(200)
+            response.status(200).json("OK")
         } else {
             response.status(404).json("Researcher not found")
         }
@@ -38,3 +38,16 @@ exports.removeResearcher = async (request, response, next) =>{
     }
 }
 
+exports.updateResearcher = async (request, response, next) =>{ 
+    try{        
+        researcher = await models.Researcher.findOne({where: {id: request.params.id}})
+        if (researcher){
+            await researcher.update({name: request.body.name, surname: request.body.surname, email: request.body.email, password: request.body.password, description: request.body.description, phone: request.body.phone})
+            response.status(200).json("OK")
+        } else {
+            response.status(404).json("Researcher not found")
+        }
+    } catch (e) {
+        next(e)
+    }
+}

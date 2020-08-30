@@ -46,3 +46,18 @@ exports.removeUser = async (request, response, next) =>{
         next(e)
     }
 }
+
+exports.updateUser = async (request, response, next) =>{   
+    try{        
+        user = await models.User.findOne({where: {id: request.params.id}})
+        if(user){
+            await user.update({name: request.body.name, surname: request.body.surname})
+            response.status(200).json("OK")
+        }else{
+            response.status(400).json("An Error ocurred")
+        }
+
+    } catch (e) {
+        next(e)
+    }
+}
