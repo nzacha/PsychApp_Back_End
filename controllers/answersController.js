@@ -11,7 +11,7 @@ exports.getAllAnswers = async (request, response, next) =>{
 
 exports.getAnswersOf = async (request, response, next) =>{
     try{
-        answers = await models.Answer.findAll({where: {userId: request.params.userId}})
+        answers = await models.Answer.findAll({include:{model: models.Question}},{where: {userId: request.params.userId}})
         response.status(200).json(answers)
     } catch (e) {
         next(e)
