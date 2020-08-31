@@ -1,6 +1,7 @@
 const http = require('http')
 const express = require('express')
 const bodyParser = require('body-parser')
+const cors = require('cors')
 const host = process.env.HOST
 const port = process.env.PORT
 
@@ -12,7 +13,7 @@ models.sequelize.sync({alter: true})
 const formData = require("express-form-data");
 
 let app=express()
-
+app.use(cors());
 
 const options = {
     //uploadDir: './pictures',
