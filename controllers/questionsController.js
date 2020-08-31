@@ -50,8 +50,8 @@ exports.addQuestionOption = async (request, response, next) =>{
     try{        
         question = await models.Question.findOne({where: {id: request.params.questionId}})        
         if(question){
-            models.Question_Option.create({questionId: request.params.questionId, option: request.body.text})
-            response.status(200).json('Question Option created')
+            option = await models.Question_Option.create({questionId: request.params.questionId, option: request.body.text})
+            response.status(200).json(option)
         }else{
             response.status(400).json("An Error ocurred")
         }
@@ -80,6 +80,20 @@ exports.updateQuestion = async (request, response, next) => {
         var question = await models.Question.findOne({where: {id: request.params.id}});
         if (question){
             await question.update({question_text: request.body.question_text, question_type: request.body.question_type, levels: request.body.levels});
+            response.status(200).json("OK")
+        } else { 
+            response.status(400).json("An Error ocurred");
+        }
+    } catch (e) {
+        next(e)
+    }
+}
+
+exports.updateQuestionOption = async (request, response, next) => {
+    try {
+        var questionOption = await models.Question_Option.findOne({where: {id: request.params.id}});
+        if (questionOption){
+            await questionOption.update({option: request.body.question_option});
             response.status(200).json("OK")
         } else { 
             response.status(400).json("An Error ocurred");
