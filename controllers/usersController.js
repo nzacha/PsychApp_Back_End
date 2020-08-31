@@ -9,6 +9,15 @@ exports.getUsers = async (request, response, next) =>{
     }
 }
 
+exports.getUsersOf = async (request, response, next) =>{
+    try{
+        users = await models.User.findAll({where: {researcherId: request.params.id}})
+        response.status(200).json(users)
+    } catch (e) {
+        next(e)
+    }
+}
+
 exports.findUser = async (request, response, next) =>{
     try{
     	user = await models.User.findOne({where: {id: request.params.id}})

@@ -3,7 +3,7 @@ const router = express.Router()
 const answersController = require('../controllers/answersController')
 
 router.get('/', answersController.getAllAnswers)
-router.get('/:userId', answersController.getAnswersOf)
+router.get('/:userId/:researcherId', answersController.getAnswersOf)
 router.post('/:questionId/:userId', answersController.addAnswer)
 router.delete('/:id', answersController.removeAnswer)
 
