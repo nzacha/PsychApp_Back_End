@@ -22,7 +22,7 @@ exports.addQuestion = async (request, response, next) =>{
     try{    	
         researcher = await models.Researcher.findOne({where: {id: request.params.researcherId}})
         if(researcher){
-	    	model = await models.Question.create({question_type: request.body.type, question_text: request.body.question, researcherId: request.params.researcherId, levels: request.body.levels})
+	    	model = await models.Question.create({question_type: request.body.type, question_text: request.body.question, researcherId: request.params.researcherId, levels: request.body.levels, orientation: request.body.orientation, request_reason: request.body.request_reason})
 	    	response.status(200).json(model)
 	    }else{
 	    	response.status(400).json("An Error ocurred")
@@ -79,7 +79,7 @@ exports.updateQuestion = async (request, response, next) => {
     try {
         var question = await models.Question.findOne({where: {id: request.params.id}});
         if (question){
-            await question.update({question_text: request.body.question_text, question_type: request.body.question_type, levels: request.body.levels});
+            await question.update({question_text: request.body.question_text, question_type: request.body.question_type, levels: request.body.levels, orientation: request.body.orientation, request_reason: request.body.request_reason});
             response.status(200).json("OK")
         } else { 
             response.status(400).json("An Error ocurred");

@@ -11,6 +11,10 @@ module.exports = (sequelize) => {
         text: {
             type: Sequelize.STRING,
             allowNull: false
+        },
+        index: {
+            type: Sequelize.INTEGER,
+            allowNull: false
         }
     }, {
         sequelize,

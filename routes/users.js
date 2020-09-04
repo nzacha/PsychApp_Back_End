@@ -4,6 +4,7 @@ const usersController = require('../controllers/usersController')
 
 router.get('/', usersController.getUsers)
 router.get('/myUsers/:id', usersController.getUsersOf)
+router.post('/progress/:id', usersController.trackProgress)
 router.get('/:id', usersController.findUser)
 router.post('/', usersController.addUser)
 router.delete('/:id', usersController.removeUser)

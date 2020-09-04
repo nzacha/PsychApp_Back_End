@@ -25,6 +25,17 @@ module.exports = (sequelize) => {
             type: Sequelize.INTEGER,
             defaultValue: '1',
             allowNull: false
+        },
+        orientation: {
+        	type: Sequelize.STRING,
+        	defaultValue: 'Vertical',
+            validate:{
+                isIn: [["Vertical", "Horizontal"]],
+            }
+        },
+        request_reason: {
+            type: Sequelize.BOOLEAN,
+            defaultValue: true
         }
     }, {
         sequelize,
