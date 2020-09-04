@@ -23,10 +23,11 @@ exports.findUser = async (request, response, next) =>{
     	user = await models.User.findOne({where: {code: request.params.id}, include:{model: models.Researcher}})    	
         if (!user)
             response.status(404).json({"error": "User not found"})
-        if (user.isActive){
-	        response.status(200).json(user)
+
+        if (!user.isActive && user.automatic_termination){
+        	response.status(400).json({"error": "User is inactive", "data": user})
         } else {
-	    	response.status(400).json({"error": "User is inactive"})
+	        response.status(200).json(user)	    	
         }
     } catch (e) {
         next(e)
@@ -65,15 +66,29 @@ exports.addUser = async (request, response, next) =>{
     }
 }
 
-exports.removeUser = async (request, response, next) =>{   
+exports.deactivateUser = async (request, response, next) =>{   
     try{        
         user = await models.User.findOne({where: {id: request.params.id}})
         if(user && user.isActive){
             await user.update({isActive: false, reason_for_exit: request.body.reason})
-            response.status(200).json({"message": "User removed", "reason": request.body.reason})
+            response.status(200).json({"message": "User deactivated", "reason": request.body.reason})
         }else{
             response.status(400).json({"error": "An Error ocurred"})
         }
+    } catch (e) {
+        next(e)
+    }
+}
+
+exports.removeUser = async (request, response, next) =>{   
+    try{        
+        user = await models.User.findOne({where: {id: request.params.id}})
+        if(user){
+	        user.destroy()
+            response.status(200).json({"message": "User removed"})
+		}else{
+			response.status(400).json({"error": "An Error ocurred"})
+		}
     } catch (e) {
         next(e)
     }
@@ -97,17 +112,31 @@ exports.updateUser = async (request, response, next) =>{
 exports.trackProgress = async (request, response, next) =>{
     try{
         user = await models.User.findOne({where: {id: request.params.id}})
-        if(user && user.automatic_termination && user.isActive){
-            user = await user.update({progress: request.body.progress})
-            if(user.progress > user.questions_total){
-                user = await user.update({isActive: false})                
-                response.status(200).json(user)
-                return;
-            }
-            response.status(200).json({"message": "progress updated"})
-            return;     
-        }else{
-            response.status(400).json({"error": "user not found"})
+        if(!user){
+        	response.status(400).json({"error": "user not found"})
+        	return;
+        }
+
+        if(user.automatic_termination){
+        	if(user.isActive){
+	            user = await user.update({progress: request.body.progress})	            
+	            if(user.progress > user.questions_total){
+	                user = await user.update({isActive: false}) 
+	                response.status(400).json({"message": "user was deactivated"})
+	                return;
+	            }
+	            response.status(200).json({"message": "progress updated"})
+	        } else {
+	            response.status(400).json({"message": "user was deactivated"})
+	        }
+            return;  
+        } else {
+        	user = await user.update({progress: request.body.progress})
+			if(user)
+				response.status(200).json({"message": "progress updated"})
+			else
+				response.status(400).json({"error": "an error occurred"})
+            return;
         }
     } catch (e) {
         next(e)
