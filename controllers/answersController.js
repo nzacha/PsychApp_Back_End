@@ -11,9 +11,12 @@ exports.getAllAnswers = async (request, response, next) =>{
 
 exports.getAnswersOf = async (request, response, next) =>{
     try{
-        user = await models.User.findOne({where: {id: request.params.userId, researcherId: request.params.researcherId}})
+        user = await models.User.findOne({where: {code: request.params.code, researcherId: request.params.researcherId}})
+        console.log()
+        console.log(request.params.code)
         if(user){
-            answers = await models.Answer.findAll({where: {userId: request.params.userId}, include:{model: models.Question, where: {researcherId: request.params.researcherId}}})
+            answers = await models.Answer.findAll({where: {id: user.id}, include:{model: models.Question, where: {researcherId: request.params.researcherId}}})
+            console.log("\n"+answers+"\n")
             response.status(200).json(answers)
         } else {
             response.status(404).json('User not found')

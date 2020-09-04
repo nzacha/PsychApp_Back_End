@@ -21,8 +21,10 @@ exports.getUsersOf = async (request, response, next) =>{
 exports.findUser = async (request, response, next) =>{
     try{
     	user = await models.User.findOne({where: {code: request.params.id}, include:{model: models.Researcher}})    	
-        if (!user)
+        if (!user){
             response.status(404).json({"error": "User not found"})
+            return;
+        }
 
         if (!user.isActive && user.automatic_termination){
         	response.status(400).json({"error": "User is inactive", "data": user})
