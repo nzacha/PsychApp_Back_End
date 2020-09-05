@@ -12,11 +12,9 @@ exports.getAllAnswers = async (request, response, next) =>{
 exports.getAnswersOf = async (request, response, next) =>{
     try{
         user = await models.User.findOne({where: {code: request.params.code, researcherId: request.params.researcherId}})
-        console.log()
-        console.log(request.params.code)
         if(user){
-            answers = await models.Answer.findAll({where: {id: user.id}, include:{model: models.Question, where: {researcherId: request.params.researcherId}}})
-            console.log("\n"+answers+"\n")
+            answers = await models.Answer.findAll({where: {userId: user.id}, include:{model: models.Question, where: {researcherId: request.params.researcherId}}})
+            answers.userName = user.name;
             response.status(200).json(answers)
         } else {
             response.status(404).json('User not found')
@@ -28,10 +26,13 @@ exports.getAnswersOf = async (request, response, next) =>{
 
 exports.addAnswer = async (request, response, next) =>{	
     try{
-    	models.Answer.create({questionId: request.params.questionId, userId: request.params.userId, text: request.body.text, index: request.body.progress})
+    	await models.Answer.create({questionId: request.params.questionId, userId: request.params.userId, text: request.body.text, index: request.body.progress})
         .then(function(){
-            response.status(200).json('Answer created')    
-        })    	
+            response.status(200).json({"message": "Answer created"})    
+        })
+        .error(function(){
+        	response.status(400).json({"error": "an error occurred"})    
+        })
     } catch (e) {
         next(e)
     }

@@ -123,7 +123,7 @@ exports.trackProgress = async (request, response, next) =>{
         	if(user.isActive){
 	            user = await user.update({progress: request.body.progress})	            
 	            if(user.progress > user.questions_total){
-	                user = await user.update({isActive: false}) 
+	                user = await user.update({isActive: false, reason_for_exit: "Terminated by system"}) 
 	                response.status(400).json({"message": "user was deactivated"})
 	                return;
 	            }
