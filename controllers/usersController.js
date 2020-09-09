@@ -11,7 +11,7 @@ exports.getUsers = async (request, response, next) =>{
 
 exports.getUsersOf = async (request, response, next) =>{
     try{
-        users = await models.User.findAll({where: {researcherId: request.params.id}})
+        users = await models.User.findAll({where: {projectId: request.params.id}})
         response.status(200).json(users)
     } catch (e) {
         next(e)
@@ -20,7 +20,7 @@ exports.getUsersOf = async (request, response, next) =>{
 
 exports.findUser = async (request, response, next) =>{
     try{
-    	user = await models.User.findOne({where: {code: request.params.id}, include:{model: models.Researcher}})    	
+    	user = await models.User.findOne({where: {code: request.params.id}, include:{model: models.Project}})    	
         if (!user){
             response.status(404).json({"error": "User not found"})
             return;
@@ -49,12 +49,12 @@ const getDigitsCode = (message, length) => {
 
 exports.addUser = async (request, response, next) =>{	
     try{    	
-    	researcher = await models.Researcher.findOne({where: {id: request.body.researcherId}})
+    	project = await models.Project.findOne({where: {id: request.body.projectId}})
     	var {name, surname, study_length, tests_per_day, tests_time_interval, allow_individual_times, allow_user_termination, automatic_termination} = request.body
-    	if(researcher){
-	    	user = await models.User.create({researcherId: researcher.id, name: name, surname: surname, questions_total: study_length*tests_per_day, study_length: study_length, tests_per_day: tests_per_day, tests_time_interval: tests_time_interval, allow_individual_times: allow_individual_times, allow_user_termination: allow_user_termination, automatic_termination: automatic_termination})
+    	if(project){
+	    	user = await models.User.create({projectId: project.id, name: name, surname: surname, questions_total: study_length*tests_per_day, study_length: study_length, tests_per_day: tests_per_day, tests_time_interval: tests_time_interval, allow_individual_times: allow_individual_times, allow_user_termination: allow_user_termination, automatic_termination: automatic_termination})
   	    	
-  	    	code = researcher.name + researcher.id + user.id
+  	    	code = ""+project.id + user.id
   	    	var token = getDigitsCode(code, 8);
   	    	user = await user.update({code: token})
 
@@ -82,8 +82,27 @@ exports.deactivateUser = async (request, response, next) =>{
     }
 }
 
-exports.removeUser = async (request, response, next) =>{   
+exports.activateUser = async (request, response, next) =>{   
     try{        
+        user = await models.User.findOne({where: {id: request.params.id}})
+        if(user){
+            await user.update({isActive: true, reason_for_exit: "reactivated by ME"})
+            response.status(200).json({"message": "User reactivated"})
+        }else{
+            response.status(400).json({"error": "An Error ocurred"})
+        }
+    } catch (e) {
+        next(e)
+    }
+}
+
+exports.removeUser = async (request, response, next) =>{   
+    try{     
+        researcher = await models.Researcher.findOne({where: {id: request.params.researcherId}})
+        if(!researcher || !researcher.is_super_user){
+            response.status(404).json({"error": "researcher not found"})   
+            return;
+        }
         user = await models.User.findOne({where: {id: request.params.id}})
         if(user){
 	        user.destroy()

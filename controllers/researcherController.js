@@ -2,7 +2,7 @@ const models = require('../models')
 
 exports.getResearchers = async (request, response, next) =>{
     try{
-        researchers = await models.Researcher.findAll()
+        researchers = await models.Researcher.findAll({include:{model: models.Project, as: 'projects', order: ["id", "asc"]}})
         response.status(200).json(researchers)
     } catch (e) {
         next(e)
@@ -11,7 +11,7 @@ exports.getResearchers = async (request, response, next) =>{
 
 exports.getResearcher = async (request, response, next) =>{
     try{
-        researcher = await models.Researcher.findOne({where: {id: request.params.id}})
+        researcher = await models.Researcher.findOne({where: {id: request.params.id}, include:{model: models.Project, as: 'projects', order: ["id", "asc"]}})
         response.status(200).json(researcher)
     } catch (e) {
         next(e)
@@ -20,11 +20,14 @@ exports.getResearcher = async (request, response, next) =>{
 
 exports.addResearcher = async (request, response, next) =>{	
     try{    	
-        email = request.body.email
-        password = request.body.password
+        var {email, password, name, surname, phone, isSuper} = request.body        
         if(email && password){
-        	researcher = await models.Researcher.create({name: request.body.name, surname: request.body.surname, email: email, password: password, phone: request.body.phone, description: request.body.description})
-            response.status(200).json("Researcher created successfully")
+        	researcher = await models.Researcher.create({name: name, surname: surname, email: email, password: password, phone: phone, is_super_user: isSuper})
+        	if(researcher){
+	            response.status(200).json("Researcher created successfully")
+        	} else {
+				response.status(400).json("Something went wrong")
+        	}
         } else {
             response.status(400).json("Something went wrong")
         }
@@ -50,9 +53,10 @@ exports.removeResearcher = async (request, response, next) =>{
 exports.updateResearcher = async (request, response, next) =>{ 
     try{        
         researcher = await models.Researcher.findOne({where: {id: request.params.id}})
-        var {name, surname, email, password, description, phone, study_length, tests_per_day, tests_time_interval, allow_individual_times, allow_user_termination, automatic_termination} = request.body
+        var {email, password, name, surname, phone} = request.body
         if (researcher){
-            researcher = await researcher.update({name: name, surname: surname, email: email, password: password, description: description, phone: phone, study_length: study_length, tests_per_day: tests_per_day, tests_time_interval: tests_time_interval, allow_individual_times: allow_individual_times, allow_user_termination: allow_user_termination, automatic_termination: automatic_termination})
+            await researcher.update({name: name, surname: surname, email: email, password: password, phone: phone})
+            researcher = await models.Researcher.findOne({where: {id: request.params.id}, include:{model: models.Project, as: 'projects', order: ["id", "asc"]}})
             response.status(200).json(researcher);
         } else {
             response.status(404).json("Researcher not found")

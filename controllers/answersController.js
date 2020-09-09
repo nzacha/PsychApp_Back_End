@@ -11,9 +11,9 @@ exports.getAllAnswers = async (request, response, next) =>{
 
 exports.getAnswersOf = async (request, response, next) =>{
     try{
-        user = await models.User.findOne({where: {code: request.params.code, researcherId: request.params.researcherId}})
+        user = await models.User.findOne({where: {code: request.params.code, projectId: request.params.projectId}})
         if(user){
-            answers = await models.Answer.findAll({where: {userId: user.id}, include:{model: models.Question, where: {researcherId: request.params.researcherId}}})
+            answers = await models.Answer.findAll({where: {userId: user.id}, include:{model: models.Question, where: {projectId: request.params.projectId}}})
             answers.userName = user.name;
             response.status(200).json(answers)
         } else {

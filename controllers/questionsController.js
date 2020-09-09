@@ -11,7 +11,7 @@ exports.getAllQuestions = async (request, response, next) =>{
 
 exports.getQuestionsOf = async (request, response, next) =>{
     try{
-        questions = await models.Question.findAll({where: {researcherId: request.params.researcherId}, include:{model: models.Question_Option}})
+        questions = await models.Question.findAll({where: {projectId: request.params.projectId}, include:{model: models.Question_Option}})
         response.status(200).json(questions)
     } catch (e) {
         next(e)
@@ -20,9 +20,9 @@ exports.getQuestionsOf = async (request, response, next) =>{
 
 exports.addQuestion = async (request, response, next) =>{	
     try{    	
-        researcher = await models.Researcher.findOne({where: {id: request.params.researcherId}})
-        if(researcher){
-	    	model = await models.Question.create({question_type: request.body.type, question_text: request.body.question, researcherId: request.params.researcherId, levels: request.body.levels, orientation: request.body.orientation, request_reason: request.body.request_reason})
+        project = await models.Project.findOne({where: {id: request.params.projectId}})
+        if(project){
+	    	model = await models.Question.create({question_type: request.body.type, question_text: request.body.question, projectId: request.params.projectId, levels: request.body.levels, orientation: request.body.orientation, request_reason: request.body.request_reason})
 	    	response.status(200).json(model)
 	    }else{
 	    	response.status(400).json("An Error ocurred")
