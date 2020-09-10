@@ -37,7 +37,7 @@ exports.findUser = async (request, response, next) =>{
 }
 
 const crypto = require('crypto')
-SECRET_KEY = "2612"
+SECRET_KEY = "26121997"
 const getDigitsCode = (message, length) => {
   const hash = crypto
     .createHmac('sha256', Buffer.from(SECRET_KEY, 'hex'))
@@ -55,7 +55,7 @@ exports.addUser = async (request, response, next) =>{
 	    	user = await models.User.create({projectId: project.id, name: name, surname: surname, questions_total: study_length*tests_per_day, study_length: study_length, tests_per_day: tests_per_day, tests_time_interval: tests_time_interval, allow_individual_times: allow_individual_times, allow_user_termination: allow_user_termination, automatic_termination: automatic_termination})
   	    	
   	    	code = ""+project.id + user.id
-  	    	var token = getDigitsCode(code, 8);
+            token = getDigitsCode(code, 4);
   	    	user = await user.update({code: token})
 
 	    	response.status(200).json({"message":"User created", "id": user.id, "code": token})

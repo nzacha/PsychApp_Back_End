@@ -11,7 +11,7 @@ exports.getProjects = async (request, response, next) =>{
 
 exports.getProject = async (request, response, next) =>{
     try{
-    	project = await models.Project.findOne({where: {id: request.params.id}, include: {model: models.Researcher, as: 'researchers'}})
+    	project = await models.Project.findOne({where: {id: request.params.id}, include: {model: models.Researcher, as: 'researchers', attributes: ['id','name', 'surname', 'email', 'phone','is_super_user']}, order: [[ 'researchers', 'id', 'DESC']]})
         response.status(200).json(project)
     } catch (e) {
         next(e)
