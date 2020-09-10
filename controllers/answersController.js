@@ -13,7 +13,7 @@ exports.getAnswersOf = async (request, response, next) =>{
     try{
         user = await models.User.findOne({where: {code: request.params.code, projectId: request.params.projectId}})
         if(user){
-            answers = await models.Answer.findAll({where: {userId: user.id}, include:{model: models.Question, where: {projectId: request.params.projectId}}})
+            answers = await models.Answer.findAll({where: {userId: user.id}, include:{model: models.Question, where: {projectId: request.params.projectId}}}) //, order: [['id', 'ASC']]
             answers.userName = user.name;
             response.status(200).json(answers)
         } else {
