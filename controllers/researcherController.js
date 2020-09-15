@@ -66,7 +66,8 @@ exports.updateResearcher = async (request, response, next) =>{
         researcher = await models.Researcher.findOne({where: {id: request.params.id}})
         var {email, password, name, surname, phone} = request.body
         if (researcher){
-            password = getHashOf(password)
+        	if(password)
+	            password = getHashOf(password)
             await researcher.update({name: name, surname: surname, email: email, password: password, phone: phone})
             researcher = await models.Researcher.findOne({attributes: ['id','name', 'surname', 'email', 'phone','is_super_user'], where: {id: request.params.id}, include:{model: models.Project, as: 'projects', order: ["id", "asc"]}})
             response.status(200).json(researcher);
