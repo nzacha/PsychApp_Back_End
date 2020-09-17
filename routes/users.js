@@ -9,7 +9,7 @@ router.get('/:id', usersController.findUser)
 router.post('/', usersController.addUser)
 router.delete('/:id', usersController.deactivateUser)
 router.get('/activate/:id', usersController.activateUser)
-router.delete('/delete/:id/:researcherId', usersController.removeUser)
+router.delete('/delete/:id', usersController.removeUser)
 router.patch('/:id', usersController.updateUser)
 
 module.exports = router

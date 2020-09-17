@@ -98,11 +98,6 @@ exports.activateUser = async (request, response, next) =>{
 
 exports.removeUser = async (request, response, next) =>{   
     try{     
-        researcher = await models.Researcher.findOne({where: {id: request.params.researcherId}})
-        if(!researcher || !researcher.is_super_user){
-            response.status(404).json({"error": "researcher not found"})   
-            return;
-        }
         user = await models.User.findOne({where: {id: request.params.id}})
         if(user){
 	        user.destroy()
@@ -139,18 +134,16 @@ exports.trackProgress = async (request, response, next) =>{
         }
 
         if(user.project.automatic_termination){
-        	if(user.isActive){
-	            user = await user.update({progress: request.body.progress})	            
-	            if(user.progress > user.questions_total){
-	                user = await user.update({isActive: false, reason_for_exit: "Terminated by system"}) 
-	                response.status(400).json({"message": "user was deactivated"})
-	                return;
-	            }
+            user = await user.update({progress: request.body.progress})	            
+            if(user.progress > user.questions_total){
+                user = await user.update({isActive: false, reason_for_exit: "Terminated by system"}) 
+                response.status(400).json({"message": "user was deactivated"})
+                return;
+            }else{
+            	user = await user.update({isActive: true, reason_for_exit: ""}) 
 	            response.status(200).json({"message": "progress updated"})
-	        } else {
-	            response.status(400).json({"message": "user was deactivated"})
-	        }
-            return;  
+	            return;
+            }
         } else {
         	user = await user.update({progress: request.body.progress})
 			if(user)
