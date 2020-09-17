@@ -26,7 +26,7 @@ exports.findUser = async (request, response, next) =>{
             return;
         }
 
-        if (!user.isActive && user.automatic_termination){
+        if (!user.isActive && user.project.automatic_termination){
         	response.status(400).json({"error": "User is inactive", "data": user})
         } else {
 	        response.status(200).json(user)	    	
@@ -132,13 +132,13 @@ exports.updateUser = async (request, response, next) =>{
 
 exports.trackProgress = async (request, response, next) =>{
     try{
-        user = await models.User.findOne({where: {id: request.params.id}})
+        user = await models.User.findOne({where: {id: request.params.id}, include:{model: models.Project}})
         if(!user){
         	response.status(400).json({"error": "user not found"})
         	return;
         }
 
-        if(user.automatic_termination){
+        if(user.project.automatic_termination){
         	if(user.isActive){
 	            user = await user.update({progress: request.body.progress})	            
 	            if(user.progress > user.questions_total){
