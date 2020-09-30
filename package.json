@@ -9,6 +9,7 @@
     "express": "^4.17.1",
     "express-form-data": "^2.0.12",
     "http": "0.0.0",
+    "mysql": "^2.18.1",
     "mysql2": "^2.1.0",
     "nodemon": "^2.0.4",
     "pg": "^7.17.1",
